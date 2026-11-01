@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เสียงและการได้ยิน | แบบทดสอบวิทยาศาสตร์ ป.6</title>
+<style>
+:root{--navy:#183153;--blue:#2878b9;--pale:#eef6fc;--ink:#243247;--green:#21865b;--red:#c74646}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(135deg,#eaf4fb,#f8f5ff);font-family:Tahoma,"Noto Sans Thai",sans-serif;color:var(--ink);line-height:1.65}
+.wrap{max-width:900px;margin:28px auto;padding:16px}
+.card{background:#fff;border-radius:20px;padding:26px;box-shadow:0 10px 30px #18315318}
+header{text-align:center;background:linear-gradient(120deg,#1c4779,#2d83bd);color:white;padding:28px 20px;border-radius:16px;margin-bottom:22px}
+header h1{font-size:clamp(24px,4vw,34px);margin:8px 0}
+header p{margin:0;color:#eaf5ff}
+.pill{display:inline-block;border:1px solid #ffffff66;background:#ffffff18;padding:5px 14px;border-radius:30px}
+.instructions{background:var(--pale);border-left:5px solid var(--blue);padding:12px 15px;border-radius:10px;margin-bottom:20px}
+.question{padding:17px 0;border-bottom:1px solid #e5edf4}
+.question:last-child{border-bottom:0}
+.qtitle{font-size:18px;font-weight:bold;margin:0 0 12px;color:var(--navy)}
+.options{display:grid;gap:8px}
+.option{display:flex;align-items:flex-start;gap:10px;padding:10px 13px;border:1px solid #dce5ee;border-radius:11px;cursor:pointer;background:#fbfdff}
+.option:hover{border-color:var(--blue);background:#f2f8fd}
+.option input{margin-top:6px;accent-color:var(--blue);transform:scale(1.12)}
+.option.correct{border-color:var(--green);background:#eaf7f0}
+.option.wrong{border-color:var(--red);background:#fff0f0}
+.explanation{display:none;margin-top:10px;padding:11px 13px;border-radius:10px;background:#f1f6fb;font-size:15px}
+.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:24px}
+button{border:0;border-radius:11px;padding:12px 24px;font-size:16px;font-weight:bold;cursor:pointer}
+.primary{background:var(--blue);color:white}.secondary{background:#e8eef5;color:var(--navy)}
+button:disabled{opacity:.5;cursor:not-allowed}
+#result{display:none;text-align:center;margin-top:22px;padding:18px;border-radius:14px;background:var(--pale)}
+.score{font-size:42px;font-weight:bold;color:var(--blue)}
+.small{font-size:14px;color:#64748b}
+@media(max-width:600px){.wrap{padding:10px;margin:10px auto}.card{padding:16px}header{padding:22px 12px}.qtitle{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="wrap"><main class="card">
+<header>
+<div class="pill">แบบฝึกทบทวนเตรียมสอบ • วิทยาศาสตร์ ป.6</div>
+<h1>🔊 เสียงและการได้ยิน</h1>
+<p>การเกิดเสียง • การเคลื่อนที่ของเสียง • ระดับเสียง • อวัยวะรับเสียงและการดูแลหู</p>
+</header>
+<div class="instructions"><strong>คำชี้แจง:</strong> มีทั้งหมด 10 ข้อ เลือกคำตอบที่ถูกต้องที่สุดเพียงข้อเดียว เมื่อตอบครบแล้วกด “ตรวจคำตอบ” เพื่อดูคะแนนและเฉลย</div>
+<form id="quizForm"><div id="questions"></div>
+<div class="actions"><button type="button" class="primary" id="checkBtn">ตรวจคำตอบ</button><button type="button" class="secondary" id="resetBtn">เริ่มทำใหม่</button></div>
+</form>
+<section id="result" aria-live="polite"></section>
+</main></div>
+<script>
+const questions = [
+{q:"เสียงเกิดขึ้นได้อย่างไร",o:["เกิดจากวัตถุมีสีสัน","เกิดจากการสั่นสะเทือนของวัตถุ","เกิดจากวัตถุมีอุณหภูมิสูง","เกิดจากแสงสะท้อน"],a:1,e:"เสียงเกิดจากการสั่นสะเทือนของแหล่งกำเนิดเสียง เช่น เส้นเสียงของคน สายกีตาร์ หรือเยื่อกลอง"},
+{q:"เพราะเหตุใดเราจึงไม่ได้ยินเสียงระฆังที่กำลังสั่น เมื่ออยู่ในสุญญากาศ",o:["ระฆังสั่นเร็วเกินไป","เสียงเดินทางได้เฉพาะในน้ำ","ไม่มีตัวกลางให้เสียงเดินทาง","สุญญากาศดูดกลืนเสียงทั้งหมด"],a:2,e:"เสียงต้องอาศัยตัวกลาง เช่น อากาศ น้ำ หรือของแข็ง ในการส่งผ่านการสั่นสะเทือน จึงเดินทางผ่านสุญญากาศไม่ได้"},
+{q:"โดยทั่วไปเสียงเดินทางผ่านตัวกลางชนิดใดได้เร็วที่สุด",o:["อากาศ","น้ำ","เหล็ก","เสียงเดินทางเร็วเท่ากันทุกตัวกลาง"],a:2,e:"โดยทั่วไปเสียงเดินทางในของแข็งได้เร็วกว่าของเหลวและแก๊ส เพราะอนุภาคอยู่ใกล้กันและถ่ายทอดการสั่นสะเทือนได้ดี"},
+{q:"เมื่อดีดสายกีตาร์แล้วเสียงดังขึ้น หากดีดแรงขึ้น สิ่งใดเปลี่ยนแปลงเด่นชัดที่สุด",o:["ความถี่เพิ่มขึ้นเสมอ","แอมพลิจูดของการสั่นเพิ่มขึ้น","เสียงเดินทางช้าลง","ความยาวคลื่นเป็นศูนย์"],a:1,e:"การดีดแรงขึ้นทำให้สายสั่นด้วยแอมพลิจูดมากขึ้น จึงได้ยินเสียงดังขึ้น ส่วนความถี่สัมพันธ์กับระดับเสียงสูงต่ำ"},
+{q:"เสียงแหลมกับเสียงทุ้มแตกต่างกันเนื่องจากสมบัติใดของคลื่นเสียง",o:["ความถี่","แอมพลิจูด","ระยะทางจากผู้ฟัง","ชนิดของหูฟัง"],a:0,e:"เสียงแหลมมีความถี่สูง ส่วนเสียงทุ้มมีความถี่ต่ำ"},
+{q:"นักเรียนตะโกนใส่หน้าผาห่างออกไป แล้วได้ยินเสียงสะท้อนกลับมา ปรากฏการณ์นี้เรียกว่าอะไร",o:["การหักเหของเสียง","การสะท้อนของเสียง","การดูดกลืนเสียง","การสั่นพ้องของแสง"],a:1,e:"เสียงสะท้อนเกิดจากคลื่นเสียงกระทบสิ่งกีดขวางแล้วสะท้อนกลับมายังผู้ฟัง"},
+{q:"ส่วนใดของหูทำหน้าที่รับคลื่นเสียงและส่งผ่านไปยังช่องหู",o:["ใบหู","คอเคลีย","ประสาทรับเสียง","ท่อยูสเตเชียน"],a:0,e:"ใบหูช่วยรวบรวมคลื่นเสียงเข้าสู่ช่องหู จากนั้นคลื่นเสียงจะทำให้แก้วหูสั่น"},
+{q:"เมื่อคลื่นเสียงผ่านช่องหูไปถึงแก้วหู จะเกิดอะไรขึ้นเป็นลำดับแรก",o:["แก้วหูสั่น","สมองสร้างเสียงขึ้นทันที","กระดูกแขนสั่น","คอเคลียหยุดทำงาน"],a:0,e:"คลื่นเสียงทำให้แก้วหูสั่น แล้วการสั่นจะส่งต่อผ่านกระดูกหูไปยังหูชั้นใน"},
+{q:"การฟังเสียงดังมากเป็นเวลานานอาจส่งผลอย่างไร",o:["ทำให้ได้ยินเสียงชัดขึ้นถาวร","ทำให้แก้วหูหนาขึ้นเสมอ","ทำลายเซลล์รับเสียงและทำให้การได้ยินเสื่อม","ไม่มีผลต่อหู"],a:2,e:"เสียงดังเป็นเวลานานอาจทำลายเซลล์ขนรับเสียงในคอเคลีย ทำให้เกิดการสูญเสียการได้ยินได้"},
+{q:"หากต้องใช้เครื่องตัดหญ้าที่มีเสียงดัง ควรปฏิบัติอย่างไรเพื่อป้องกันอันตรายต่อการได้ยิน",o:["เร่งเสียงเครื่องให้ดังขึ้น","ใช้ที่อุดหูหรือครอบหูลดเสียง และจำกัดเวลาสัมผัสเสียง","ถอดอุปกรณ์ป้องกันเพื่อฟังเสียงชัด","ยืนใกล้เครื่องให้มากที่สุด"],a:1,e:"ควรใช้อุปกรณ์ป้องกันการได้ยินที่เหมาะสม เพิ่มระยะห่างจากแหล่งเสียง และลดเวลาที่สัมผัสเสียงดัง"}
+];
+const letters=["ก","ข","ค","ง"];
+const root=document.getElementById("questions");
+function renderQuestions(){
+ root.innerHTML=questions.map((q,i)=>`<section class="question"><p class="qtitle">ข้อ ${i+1}. ${q.q}</p><div class="options">${q.o.map((v,j)=>`<label class="option" id="opt${i}_${j}"><input type="radio" name="q${i}" value="${j}"><span><strong>${letters[j]}.</strong> ${v}</span></label>`).join("")}</div><div class="explanation" id="exp${i}"></div></section>`).join("");
+}
+function checkAnswers(){
+ let score=0,unanswered=[];
+ questions.forEach((q,i)=>{
+  const selected=document.querySelector(`input[name="q${i}"]:checked`);
+  if(!selected){unanswered.push(i+1);return}
+  const chosen=Number(selected.value);
+  if(chosen===q.a)score++;
+  q.o.forEach((_,j)=>{
+   const label=document.getElementById(`opt${i}_${j}`);
+   if(j===q.a)label.classList.add("correct");
+   if(j===chosen && chosen!==q.a)label.classList.add("wrong");
+  });
+  const exp=document.getElementById(`exp${i}`);
+  exp.style.display="block";
+  exp.innerHTML=`<strong>${chosen===q.a?"✓ ตอบถูกต้อง":"✗ คำตอบที่ถูกคือ "+letters[q.a]}</strong><br>${q.e}`;
+ });
+ if(unanswered.length){alert("กรุณาตอบข้อ "+unanswered.join(", ")+" ก่อนตรวจคำตอบ");return}
+ const result=document.getElementById("result");
+ result.style.display="block";
+ result.innerHTML=`<div class="small">ผลการทำแบบทดสอบ</div><div class="score">${score} / 10 คะแนน</div><h2>${score>=8?"ยอดเยี่ยม! เข้าใจเรื่องเสียงและการได้ยินได้ดี":score>=5?"ทำได้ดีแล้ว ลองทบทวนเฉลยอีกครั้ง":"ทบทวนคำอธิบาย แล้วลองทำใหม่อีกครั้งนะ"}</h2><p>ตรวจคำตอบครบทั้ง 10 ข้อแล้ว</p>`;
+ document.getElementById("checkBtn").disabled=true;
+ result.scrollIntoView({behavior:"smooth",block:"center"});
+}
+function resetQuiz(){
+ document.getElementById("quizForm").reset();
+ document.querySelectorAll(".option").forEach(x=>x.classList.remove("correct","wrong"));
+ document.querySelectorAll(".explanation").forEach(x=>{x.style.display="none";x.innerHTML=""});
+ const result=document.getElementById("result");result.style.display="none";result.innerHTML="";
+ document.getElementById("checkBtn").disabled=false;
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+document.getElementById("checkBtn").addEventListener("click",checkAnswers);
+document.getElementById("resetBtn").addEventListener("click",resetQuiz);
+renderQuestions();
+</script>
+</body>
+</html>
